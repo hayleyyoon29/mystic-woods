@@ -1,0 +1,43 @@
+[gd_scene load_steps=4 format=3 uid="uid://d16mvijkjqb64"]
+
+[ext_resource type="Script" path="res://heart bar.gd" id="1_3lqqm"]
+[ext_resource type="Texture2D" uid="uid://dl2ese5u7uwed" path="res://sprites/objects/objects.png" id="1_b4nfv"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5c1d4"]
+atlas = ExtResource("1_b4nfv")
+region = Rect2(130.768, 39.7792, 9.38704, 9.13671)
+
+[node name="HeartBar" type="HBoxContainer"]
+offset_right = 291.0
+offset_bottom = 55.0
+script = ExtResource("1_3lqqm")
+
+[node name="H1" type="TextureRect" parent="."]
+layout_mode = 2
+texture = SubResource("AtlasTexture_5c1d4")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="H2" type="TextureRect" parent="."]
+layout_mode = 2
+texture = SubResource("AtlasTexture_5c1d4")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="H3" type="TextureRect" parent="."]
+layout_mode = 2
+texture = SubResource("AtlasTexture_5c1d4")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="H4" type="TextureRect" parent="."]
+layout_mode = 2
+texture = SubResource("AtlasTexture_5c1d4")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="H5" type="TextureRect" parent="."]
+layout_mode = 2
+texture = SubResource("AtlasTexture_5c1d4")
+expand_mode = 3
+stretch_mode = 4
