@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://scopn1x7vfa7"]
+[gd_scene load_steps=13 format=3 uid="uid://scopn1x7vfa7"]
 
 [ext_resource type="Texture2D" uid="uid://duf7gjypxn430" path="res://sprites/characters/skeleton.png" id="1_7ootu"]
 
@@ -6,10 +6,11 @@
 script/source = "extends CharacterBody2D
 
 var speed = 40
-enum states {IDLE, CHASE, ATTACK, DEAD, HURT}
+enum states {IDLE, CHASE, ATTACK, DEAD}
 var state = states.IDLE
 var player
 var health = 3
+var minimap_icon = \"mob\"
 
 func _physics_process(delta):
 	choose_action()
@@ -32,6 +33,7 @@ func choose_action():
 		states.ATTACK:
 			velocity = Vector2.ZERO
 			$AnimationPlayer.play(\"attack\")
+			await $AnimationPlayer.animation_finished
 			transform.x.x = sign(position.direction_to(player.position).x)
 
 func _on_detect_body_entered(body):
@@ -49,22 +51,21 @@ func _on_attack_body_exited(body):
 	state = states.CHASE
 
 func hurt(amount, dir):
-	health -= amount
+	health -= 1
 	var prev_state = state
-	state = states.HURT
-	velocity = dir * 100
+	velocity = Vector2.ZERO
 	await get_tree().create_timer(0.2).timeout
 	state = prev_state
 	if health <= 0:
 		state = states.DEAD
 
 func _on_hurtbox_body_entered(body):
-	pass # Replace with function body.
+	body.hurt(1, position.direction_to(body.position))
+ 
 "
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_jqg5i"]
-radius = 8.0
-height = 20.0
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vh6vb"]
+size = Vector2(10, 6)
 
 [sub_resource type="Animation" id="Animation_vbke4"]
 length = 0.001
@@ -129,23 +130,6 @@ tracks/0/keys = {
 "values": [0, 3]
 }
 
-[sub_resource type="Animation" id="Animation_mlkfp"]
-resource_name = "walking"
-length = 2.0
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 2),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [5, 11]
-}
-
 [sub_resource type="Animation" id="Animation_5gdfk"]
 resource_name = "run"
 loop_mode = 1
@@ -168,19 +152,19 @@ _data = {
 "attack": SubResource("Animation_w87ps"),
 "death": SubResource("Animation_kumoi"),
 "idle": SubResource("Animation_ogsfc"),
-"run": SubResource("Animation_5gdfk"),
-"walking": SubResource("Animation_mlkfp")
+"run": SubResource("Animation_5gdfk")
 }
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_4wb3r"]
 radius = 42.0119
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ys2tr"]
-radius = 21.095
+radius = 22.0227
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1awpn"]
+size = Vector2(31, 27.5)
 
-[node name="skeleton1" type="CharacterBody2D"]
+[node name="skeleton1" type="CharacterBody2D" groups=["minimap_objects"]]
 collision_layer = 4
 collision_mask = 2
 script = SubResource("GDScript_qe50g")
@@ -192,8 +176,9 @@ hframes = 6
 vframes = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -8)
-shape = SubResource("CapsuleShape2D_jqg5i")
+position = Vector2(0, -1)
+shape = SubResource("RectangleShape2D_vh6vb")
+debug_color = Color(0, 0.6, 0.701961, 0.419608)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 playback_process_mode = 0
@@ -206,7 +191,7 @@ collision_layer = 4
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Detect"]
-position = Vector2(0, -8)
+position = Vector2(3, -8)
 shape = SubResource("CircleShape2D_4wb3r")
 
 [node name="Label" type="Label" parent="Detect"]
@@ -220,7 +205,7 @@ collision_layer = 4
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Attack"]
-position = Vector2(0, -8)
+position = Vector2(3, -8)
 shape = SubResource("CircleShape2D_ys2tr")
 
 [node name="Hurtbox" type="Area2D" parent="."]
@@ -228,9 +213,8 @@ collision_layer = 4
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
-position = Vector2(12, -10)
+position = Vector2(1, -8)
 shape = SubResource("RectangleShape2D_1awpn")
-disabled = true
 
 [connection signal="body_entered" from="Detect" to="." method="_on_detect_body_entered"]
 [connection signal="body_exited" from="Detect" to="." method="_on_detect_body_exited"]

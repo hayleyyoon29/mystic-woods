@@ -1,0 +1,50 @@
+[gd_scene load_steps=7 format=3 uid="uid://dkt08x1vliokk"]
+
+[ext_resource type="Script" path="res://minimap.gd" id="1_er8jq"]
+[ext_resource type="Texture2D" uid="uid://bcl5fwuswxosa" path="res://assets/panel_woodDetail_blank.png" id="2_lp6ng"]
+[ext_resource type="Texture2D" uid="uid://xf85750g2kpn" path="res://assets/pattern_blueprintPaper.png" id="3_1offl"]
+[ext_resource type="Texture2D" uid="uid://xbevxkrqkvb0" path="res://assets/minimapIcon_arrowA.png" id="4_3nco5"]
+[ext_resource type="Texture2D" uid="uid://bcwhy6xwqm6qh" path="res://assets/minimapIcon_jewelRed.png" id="5_l4qbs"]
+[ext_resource type="Texture2D" uid="uid://da8wp1vyh530l" path="res://assets/minimapIcon_exclamationYellow.png" id="6_5uiwf"]
+
+[node name="Minimap" type="MarginContainer"]
+custom_minimum_size = Vector2(200, 200)
+offset_right = 138.0
+offset_bottom = 138.0
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+script = ExtResource("1_er8jq")
+
+[node name="Frame" type="NinePatchRect" parent="."]
+layout_mode = 2
+texture = ExtResource("2_lp6ng")
+patch_margin_left = 64
+patch_margin_top = 64
+patch_margin_right = 64
+patch_margin_bottom = 64
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="Grid" type="TextureRect" parent="MarginContainer"]
+layout_mode = 2
+texture = ExtResource("3_1offl")
+stretch_mode = 1
+
+[node name="PlayerMarker" type="Sprite2D" parent="MarginContainer/Grid"]
+position = Vector2(72, 72)
+texture = ExtResource("4_3nco5")
+
+[node name="MobMarker" type="Sprite2D" parent="MarginContainer/Grid"]
+visible = false
+texture = ExtResource("5_l4qbs")
+
+[node name="AlertMarker" type="Sprite2D" parent="MarginContainer/Grid"]
+visible = false
+texture = ExtResource("6_5uiwf")

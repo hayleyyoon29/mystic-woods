@@ -1,4 +1,5 @@
 extends CharacterBody2D
+class_name character
 
 signal health_changed
 
@@ -18,10 +19,13 @@ func _physics_process(delta):
 	if velocity == Vector2.ZERO:
 		$AnimationPlayer.play("idle %s" % direction)
 		
-	if velocity.x != 0:
-		transform.x.x = sign(velocity.x)
-		direction = "sideways"
-		$AnimationPlayer.play("walk sideways")
+	if velocity.x > 0:
+		$AnimationPlayer.play("walk left")
+		direction = "left"
+		
+	if velocity.x < 0:
+		$AnimationPlayer.play("walk right")
+		direction = "right"
 	
 	if velocity.y < 0:
 		$AnimationPlayer.play("walk back")
@@ -36,15 +40,15 @@ func _input(event):
 		attack()
 		
 func attack():
-	$AnimationPlayer.play("attack forward")
+	$AnimationPlayer.play("attack %s" % direction)
 	attacking = true
 	await $AnimationPlayer.animation_finished
 	attacking = false
 
 func _on_hurtbox_body_entered(body):
-	body.hurt(1)
+	body.hurt(1, position.direction_to(body.position))
 
-func hurt(amount):
+func hurt(amount, direction):
 	health -= amount
 	health_changed.emit(health)
 	if health <= 0:
